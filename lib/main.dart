@@ -1,5 +1,7 @@
-import 'package:auth_app/screens/launch_screen.dart';
-import 'package:auth_app/screens/login_screen.dart';
+import 'package:auth_app/screens/app/home_screen.dart';
+import 'package:auth_app/screens/auth/core/launch_screen.dart';
+import 'package:auth_app/screens/auth/login_screen.dart';
+import 'package:auth_app/screens/auth/register_phone_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -23,6 +25,8 @@ class MyApp extends StatelessWidget {
           routes: {
             '/launch_screen': (context) => const LaunchScreen(),
             '/login_screen': (context) => const LoginScreen(),
+            '/register_phone_screen': (context) => const RegisterPhoneScreen(),
+            '/home_screen': (context) => const HomeScreen(),
           },
         );
       },
