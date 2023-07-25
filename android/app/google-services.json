@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "58996386691",
+    "project_id": "authapp-50779",
+    "storage_bucket": "authapp-50779.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:58996386691:android:f4e4a4371b6928dd3c24b6",
+        "android_client_info": {
+          "package_name": "com.hhauth.auth_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "58996386691-ehcp7d4a8ompm3237b0b2t6tar4jj9gc.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hhauth.auth_app",
+            "certificate_hash": "272c5165e6eb12043ce25bd839f8ca0a9bd94d10"
+          }
+        },
+        {
+          "client_id": "58996386691-eim2cu1pkqc12sh3a6ligb4q3hjt6d4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBOOKRTOkWpdzNdAgscMpzlcrFlfcgUScE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "58996386691-eim2cu1pkqc12sh3a6ligb4q3hjt6d4n.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "58996386691-gft2b34k86vc9tlm2k4l05adid68vkrq.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.hhauth.authApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
