@@ -48,7 +48,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.blueAccent,
                   title: 'facebook',
                   image: 'facebook',
-                  onPressed: () {}),
+                  onPressed: () async {
+                    FbResponse response =
+                        await FbAuthController().signInWithFacebook();
+                    if (response.success) {
+                      Navigator.pushNamed(context, '/home_screen');
+                    }
+                    if (!response.success) {
+                      print('response.message${response.message}');
+                      context.showAwesomeDialog(
+                          message: response.message, error: !response.success);
+                    }
+                  }),
               ButtonLogin(
                   color: Colors.white54,
                   title: 'Google',

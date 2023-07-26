@@ -1,9 +1,59 @@
 import 'package:app_auth/models/fb_response.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class FbAuthController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  Future<FbResponse> signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+
+      if (loginResult.status == LoginStatus.success) {
+        final AccessToken accessToken = loginResult.accessToken!;
+        final OAuthCredential oauthCredentials =
+            FacebookAuthProvider.credential(accessToken.token);
+        final UserCredential userFacebook =
+            await FirebaseAuth.instance.signInWithCredential(oauthCredentials);
+
+        bool verify = userFacebook.user != null;
+        return FbResponse(
+            verify ? 'Logged in successfully' : 'Verify your email', verify);
+      } else if (loginResult.status == LoginStatus.cancelled) {
+        return FbResponse('Facebook login was canceled by the user.', false);
+      } else {
+        return FbResponse(
+            'Facebook login failed. Check your internet connection and try again.',
+            false);
+      }
+    } on FirebaseAuthException catch (e) {
+      return FbResponse(e.message ?? 'Error', false);
+    } catch (e) {
+      return FbResponse('Something went wrong: ${e.toString()}', false);
+    }
+  }
+/*
+  Future<FbResponse> signInWithFacebook() async {
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      final AccessToken accessToken = loginResult.accessToken!;
+
+      final OAuthCredential oauthCredentials =
+          FacebookAuthProvider.credential(accessToken.token);
+      final UserCredential userFacebook =
+          await FirebaseAuth.instance.signInWithCredential(oauthCredentials);
+
+      bool verify = userFacebook.user != null;
+      return FbResponse(
+          verify ? 'Logged in successfully' : 'Verify your email', verify);
+    } on FirebaseAuthException catch (e) {
+      return FbResponse(e.message ?? 'Error', false);
+    } catch (e) {
+      return FbResponse('Something went wrong: ${e.toString()}', false);
+    }
+  }
+*/
 
   Future<FbResponse> signInWithGoogle() async {
     try {
