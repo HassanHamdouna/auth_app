@@ -1,4 +1,4 @@
-package com.hhauth.auth_app
+package com.hhhauth.app_auth
 
 import io.flutter.embedding.android.FlutterActivity
 

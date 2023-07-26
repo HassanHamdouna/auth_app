@@ -3,21 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>58996386691-gft2b34k86vc9tlm2k4l05adid68vkrq.apps.googleusercontent.com</string>
+	<string>555697000152-3f2nbjtm01qntj1n2nvb83cohqaqq5pm.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.58996386691-gft2b34k86vc9tlm2k4l05adid68vkrq</string>
+	<string>com.googleusercontent.apps.555697000152-3f2nbjtm01qntj1n2nvb83cohqaqq5pm</string>
 	<key>API_KEY</key>
-	<string>AIzaSyD3E1gVs-wDJlUTqZZpz0mG9n0pw-b2Nxk</string>
+	<string>AIzaSyDmv9KMU-hv-LZV2O9wLhCwxIpvhMWmiyk</string>
 	<key>GCM_SENDER_ID</key>
-	<string>58996386691</string>
+	<string>555697000152</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.hhauth.authApp</string>
+	<string>com.hhhauth.appAuth</string>
 	<key>PROJECT_ID</key>
-	<string>authapp-50779</string>
+	<string>appauth-3cce4</string>
 	<key>STORAGE_BUCKET</key>
-	<string>authapp-50779.appspot.com</string>
+	<string>appauth-3cce4.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -29,7 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:58996386691:ios:88d4605af70695023c24b6</string>
-
+	<string>1:555697000152:ios:dadd54dc7c764f9bff91ad</string>
 </dict>
 </plist>

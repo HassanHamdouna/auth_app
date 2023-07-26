@@ -1,4 +1,4 @@
-import 'package:auth_app/widgets/app_text_field.dart';
+import 'package:app_auth/widgets/app_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';

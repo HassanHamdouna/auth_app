@@ -1,4 +1,7 @@
-import 'package:auth_app/widgets/button_login.dart';
+import 'package:app_auth/firebase/fb_auth_controller.dart';
+import 'package:app_auth/models/fb_response.dart';
+import 'package:app_auth/utils/context_extenssion.dart';
+import 'package:app_auth/widgets/button_login.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -50,7 +53,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   color: Colors.white54,
                   title: 'Google',
                   image: 'google',
-                  onPressed: () {}),
+                  onPressed: () async {
+                    FbResponse response =
+                        await FbAuthController().signInWithGoogle();
+                    if (response.success) {
+                      Navigator.pushReplacementNamed(context, '/home_screen');
+                    }
+                    if (!response.success) {
+                      print('response.message${response.message}');
+                      context.showAwesomeDialog(
+                          message: response.message, error: !response.success);
+                    }
+                  }),
               ButtonLogin(
                   color: Colors.black26,
                   title: 'Twitter',

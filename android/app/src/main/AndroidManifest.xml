@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.hhauth.auth_app">
+    package="com.hhhauth.app_auth">
    <application
-        android:label="auth_app"
+        android:label="app_auth"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
