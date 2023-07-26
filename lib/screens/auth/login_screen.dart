@@ -57,7 +57,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FbResponse response =
                         await FbAuthController().signInWithGoogle();
                     if (response.success) {
-                      Navigator.pushReplacementNamed(context, '/home_screen');
+                      Navigator.pushNamed(context, '/home_screen');
                     }
                     if (!response.success) {
                       print('response.message${response.message}');
