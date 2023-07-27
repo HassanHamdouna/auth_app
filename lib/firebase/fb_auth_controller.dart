@@ -6,6 +6,48 @@ import 'package:google_sign_in/google_sign_in.dart';
 class FbAuthController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  Future<FbResponse> checkOTP(String verificationId, String smsCode) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+          verificationId: verificationId, smsCode: smsCode);
+      await _auth.signInWithCredential(credential);
+      return FbResponse('Registered successfully , verify email ', true);
+    } on FirebaseAuthException catch (e) {
+      return FbResponse(e.message ?? 'error', false);
+    } catch (e) {
+      return FbResponse('Something went Wrong', false);
+    }
+  }
+
+  Future<FbResponse> signInWithPhone(int yourNumber) async {
+    try {
+      FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: '+970 123456789', //yourNumber
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          try {
+            await _auth.signInWithCredential(credential);
+            print('successfully ::=>');
+          } catch (e) {
+            print('Error signing in: ${e.toString()}');
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print('Error FirebaseAuthException: ${e.message}');
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          print('Verification code sent to your phone ::=> ');
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {},
+      );
+      return FbResponse('Registered successfully , verify email ', true);
+    } on FirebaseAuthException catch (e) {
+      return FbResponse(e.message ?? 'error', false);
+    } catch (e) {
+      return FbResponse('Something went Wrong', false);
+    }
+  }
+
   Future<FbResponse> signInWithFacebook() async {
     try {
       final LoginResult loginResult = await FacebookAuth.instance.login();
@@ -33,6 +75,7 @@ class FbAuthController {
       return FbResponse('Something went wrong: ${e.toString()}', false);
     }
   }
+
 /*
   Future<FbResponse> signInWithFacebook() async {
     try {

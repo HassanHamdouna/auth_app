@@ -6,16 +6,16 @@ class AppTextField extends StatelessWidget {
   const AppTextField({
     Key? key,
     required this.hint,
-    required this.prefixIcon,
     required this.keyboardType,
     required this.controller,
     this.focusedBorderColor = Colors.grey,
     this.obscureText = false,
     this.suffixIcon,
+    this.prefixIcon,
   }) : super(key: key);
 
   final String hint;
-  final IconData prefixIcon;
+  final IconData? prefixIcon;
   final TextInputType keyboardType;
   final TextEditingController controller;
   final Color focusedBorderColor;
