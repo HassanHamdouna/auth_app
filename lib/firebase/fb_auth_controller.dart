@@ -5,29 +5,16 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FbAuthController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  String? verID;
 
-  Future<FbResponse> checkOTP(String verificationId, String smsCode) async {
+  Future<FbResponse> signInWithPhone(String yourNumber) async {
     try {
-      PhoneAuthCredential credential = PhoneAuthProvider.credential(
-          verificationId: verificationId, smsCode: smsCode);
-      await _auth.signInWithCredential(credential);
-      return FbResponse('Registered successfully , verify email ', true);
-    } on FirebaseAuthException catch (e) {
-      return FbResponse(e.message ?? 'error', false);
-    } catch (e) {
-      return FbResponse('Something went Wrong', false);
-    }
-  }
-
-  Future<FbResponse> signInWithPhone(int yourNumber) async {
-    try {
-      FirebaseAuth.instance.verifyPhoneNumber(
-        phoneNumber: '+970 123456789', //yourNumber
+      _auth.verifyPhoneNumber(
+        phoneNumber: yourNumber, //yourNumber
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           try {
             await _auth.signInWithCredential(credential);
-            print('successfully ::=>');
           } catch (e) {
             print('Error signing in: ${e.toString()}');
           }
@@ -36,14 +23,35 @@ class FbAuthController {
           print('Error FirebaseAuthException: ${e.message}');
         },
         codeSent: (String verificationId, int? resendToken) {
-          print('Verification code sent to your phone ::=> ');
+          verID = verificationId;
         },
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
-      return FbResponse('Registered successfully , verify email ', true);
+      return FbResponse('Registered successfully , verify email ', true,
+          verificationId: verID);
     } on FirebaseAuthException catch (e) {
       return FbResponse(e.message ?? 'error', false);
     } catch (e) {
+      return FbResponse('Something went Wrong', false);
+    }
+  }
+
+  Future<FbResponse> signInWithCheckOTP(
+      String verificationId, String smsCode) async {
+    try {
+      PhoneAuthCredential credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      print("User signed in successfully!");
+      return FbResponse('User signed in successfully', true);
+    } on FirebaseAuthException catch (e) {
+      return FbResponse(e.message ?? 'error', false);
+    } catch (e) {
+      print("Error during SMS code verification: $e");
       return FbResponse('Something went Wrong', false);
     }
   }

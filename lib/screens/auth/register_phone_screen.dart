@@ -1,7 +1,9 @@
 import 'package:app_auth/firebase/fb_auth_controller.dart';
 import 'package:app_auth/models/fb_response.dart';
+import 'package:app_auth/screens/auth/verification_screen.dart';
 import 'package:app_auth/utils/context_extenssion.dart';
 import 'package:app_auth/widgets/app_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -157,12 +159,19 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   }
 
   void login() async {
-    FbResponse response = await FbAuthController().signInWithPhone(0);
+    FbResponse response =
+        await FbAuthController().signInWithPhone('+970 123456789');
+
     if (response.success) {
-      Navigator.pushReplacementNamed(context, '/verification_screen');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerificationScreen(
+                verificationId: response.verificationId!,
+                yourNumber: '+970 123456789'),
+          ));
     }
     if (!response.success) {
-      print('response.message${response.message}');
       context.showAwesomeDialog(
           message: response.message, error: !response.success);
     }

@@ -1,54 +1,91 @@
+import 'dart:async';
+
 import 'package:app_auth/firebase/fb_auth_controller.dart';
 import 'package:app_auth/models/fb_response.dart';
 import 'package:app_auth/utils/context_extenssion.dart';
+import 'package:app_auth/widgets/text_filed_otp.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class VerificationScreen extends StatefulWidget {
-  const VerificationScreen({Key? key}) : super(key: key);
+  const VerificationScreen(
+      {Key? key, required this.verificationId, required this.yourNumber})
+      : super(key: key);
+  final String verificationId;
+  final String yourNumber;
 
   @override
   _VerificationScreenState createState() => _VerificationScreenState();
 }
 
 class _VerificationScreenState extends State<VerificationScreen> {
-  late List<TextEditingController> _digitControllers;
-  late List<FocusNode> _focusNodes;
+  static const maxSeconds = 60;
+  int seconds = maxSeconds;
+  Timer? timer;
+  void startTime() {
+    seconds = 60;
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (seconds > 0) {
+          seconds--;
+        } else {
+          stopTime();
+        }
+      });
+    });
+  }
+
+  void stopTime() {
+    timer?.cancel();
+  }
+
+  String verificationCode = '';
+  late TextEditingController _oneOTPControllers;
+  late TextEditingController _towOTPControllers;
+  late TextEditingController _threeOTPControllers;
+  late TextEditingController _fourOTPControllers;
+  late TextEditingController _fiveOTPControllers;
+  late TextEditingController _sixOTPControllers;
 
   @override
   void initState() {
     super.initState();
-    _digitControllers = List.generate(6, (index) => TextEditingController());
-    _focusNodes = List.generate(6, (index) => FocusNode());
+    _oneOTPControllers = TextEditingController();
+    _towOTPControllers = TextEditingController();
+    _threeOTPControllers = TextEditingController();
+    _fourOTPControllers = TextEditingController();
+    _fiveOTPControllers = TextEditingController();
+    _sixOTPControllers = TextEditingController();
+    startTime();
   }
 
   @override
   void dispose() {
-    for (var controller in _digitControllers) {
-      controller.dispose();
-    }
-    for (var focusNode in _focusNodes) {
-      focusNode.dispose();
-    }
+    _oneOTPControllers.dispose();
+    _towOTPControllers.dispose();
+    _threeOTPControllers.dispose();
+    _fourOTPControllers.dispose();
+    _fiveOTPControllers.dispose();
+    _sixOTPControllers.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (seconds == 0) {
+      stopTime();
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        elevation: 0,
+        toolbarHeight: 80,
         backgroundColor: Colors.white,
         title: Align(
           alignment: AlignmentDirectional.topStart,
-          child: Text(
-            'OTP',
-            style: GoogleFonts.poppins(
-              color: const Color(0xff0D5DA6),
-            ),
-          ),
         ),
         centerTitle: true,
         leading: IconButton(
@@ -72,36 +109,56 @@ class _VerificationScreenState extends State<VerificationScreen> {
                   fontWeight: FontWeight.w700),
             ),
             Text(
-              'We have sent you a verification code message to your number ',
+              'We have sent you a verification code message to',
               style: GoogleFonts.notoKufiArabic(
                   color: Colors.black,
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w400),
             ),
             Text(
-              '9xxxxxxxx',
+              widget.yourNumber,
               style: GoogleFonts.notoKufiArabic(
                   color: Colors.black,
                   fontSize: 14.sp,
-                  fontWeight: FontWeight.w400),
+                  fontWeight: FontWeight.w700),
             ),
             SizedBox(height: 20.h),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: List.generate(
-                6,
-                (index) => buildDigitTextField(index),
-              ),
+              children: [
+                TextFiledOTP(controller: _oneOTPControllers),
+                TextFiledOTP(controller: _towOTPControllers),
+                TextFiledOTP(controller: _threeOTPControllers),
+                TextFiledOTP(controller: _fourOTPControllers),
+                TextFiledOTP(controller: _fiveOTPControllers),
+                TextFiledOTP(controller: _sixOTPControllers),
+              ],
             ),
             SizedBox(height: 25.h),
-            Align(
-              alignment: AlignmentDirectional.center,
-              child: Text('Resend the code',
-                  style: GoogleFonts.notoKufiArabic(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 13.sp,
-                  )),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                    onPressed: () {
+                      if (seconds == 0) {
+                        startTime();
+                      }
+                    },
+                    child: Text(
+                      'Resend the code',
+                      style: GoogleFonts.notoKufiArabic(
+                        color: Colors.grey,
+                        fontWeight: FontWeight.w400,
+                        fontSize: 13.sp,
+                      ),
+                    )),
+                Text('00:${seconds}',
+                    style: GoogleFonts.notoKufiArabic(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                      fontSize: 13.sp,
+                    )),
+              ],
             ),
             SizedBox(height: 20.h),
             Align(
@@ -114,10 +171,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
                         borderRadius: BorderRadius.circular(12.r))),
                 onPressed: () {
                   _performOTP();
-                  String verificationCode = '';
-                  for (var controller in _digitControllers) {
-                    verificationCode += controller.text;
-                  }
                 },
                 child: Text('verification',
                     style: GoogleFonts.notoKufiArabic(
@@ -133,47 +186,6 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 
-  Widget buildDigitTextField(int index) {
-    return SizedBox(
-      width: 40.w,
-      height: 40.h,
-      child: TextField(
-        controller: _digitControllers[index],
-        keyboardType: TextInputType.number,
-        maxLength: 1,
-        textAlign: TextAlign.center,
-        decoration: InputDecoration(
-          filled: true,
-          fillColor: Colors.black.withOpacity(0.2),
-          counterText: '',
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.r),
-            borderSide: const BorderSide(color: Colors.transparent),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(5.r),
-            borderSide: const BorderSide(color: Colors.transparent),
-          ),
-        ),
-        focusNode: _focusNodes[index],
-        onChanged: (value) {
-          if (value.isEmpty) {
-            if (index > 0) {
-              _focusNodes[index].unfocus();
-              FocusScope.of(context).requestFocus(_focusNodes[index - 1]);
-            }
-          } else if (value.isNotEmpty && index < _focusNodes.length - 1) {
-            _focusNodes[index].unfocus();
-            FocusScope.of(context).requestFocus(_focusNodes[index + 1]);
-          }
-        },
-        onEditingComplete: () {
-          _focusNodes[index].unfocus();
-        },
-      ),
-    );
-  }
-
   void _performOTP() {
     if (_checkData()) {
       _login();
@@ -181,23 +193,53 @@ class _VerificationScreenState extends State<VerificationScreen> {
   }
 
   bool _checkData() {
-    if (_digitControllers.isEmpty) {
+    if (_oneOTPControllers.text.isNotEmpty &&
+        _towOTPControllers.text.isNotEmpty &&
+        _threeOTPControllers.text.isNotEmpty &&
+        _fourOTPControllers.text.isNotEmpty &&
+        _fiveOTPControllers.text.isNotEmpty &&
+        _sixOTPControllers.text.isNotEmpty) {
       return true;
     }
+    context.showAwesomeDialog(message: 'empty number', error: false);
     return false;
   }
 
   void _login() async {
-    FbResponse response =
-        await FbAuthController().checkOTP('verificationId', 'smsCode');
+    String smsCode = _oneOTPControllers.text +
+        _towOTPControllers.text +
+        _threeOTPControllers.text +
+        _fourOTPControllers.text +
+        _fiveOTPControllers.text +
+        _sixOTPControllers.text;
+
+    FbResponse response = await FbAuthController()
+        .signInWithCheckOTP(widget.verificationId, smsCode);
     if (response.success) {
-      Navigator.pushReplacementNamed(context, '/verification_screen');
+      Navigator.pushReplacementNamed(context, '/home_screen');
     }
     if (!response.success) {
-      print('response.message${response.message}');
       context.showAwesomeDialog(
           message: response.message, error: !response.success);
     }
-    Navigator.pushReplacementNamed(context, '/home_screen');
+
+    // PhoneAuthCredential credential = PhoneAuthProvider.credential(
+    //     verificationId: widget.verificationId, smsCode: smsCode);
+    // await FirebaseAuth.instance.signInWithCredential(credential);
+    //
+    // if (FirebaseAuth.instance.currentUser != null) {
+    //   print('object :: currentUser');
+    //   Navigator.pushReplacementNamed(context, '/home_screen');
+    // } else {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //     const SnackBar(
+    //       content: Text('error OTP'),
+    //       backgroundColor: Colors.red,
+    //       elevation: 0,
+    //       behavior: SnackBarBehavior.floating,
+    //       duration: Duration(seconds: 1),
+    //     ),
+    //   );
+    // }
   }
 }

@@ -33,7 +33,7 @@ class MyApp extends StatelessWidget {
             '/launch_screen': (context) => const LaunchScreen(),
             '/login_screen': (context) => const LoginScreen(),
             '/register_phone_screen': (context) => const RegisterPhoneScreen(),
-            '/verification_screen': (context) => const VerificationScreen(),
+            // '/verification_screen': (context) =>  VerificationScreen(),
             '/home_screen': (context) => const HomeScreen(),
           },
         );
