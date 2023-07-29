@@ -52,7 +52,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FbResponse response =
                         await FbAuthController().signInWithFacebook();
                     if (response.success) {
-                      Navigator.pushNamed(context, '/home_screen');
+                      Navigator.pushNamed(context, '/message_screen');
                     }
                     if (!response.success) {
                       print('response.message${response.message}');
@@ -68,7 +68,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FbResponse response =
                         await FbAuthController().signInWithGoogle();
                     if (response.success) {
-                      Navigator.pushNamed(context, '/home_screen');
+                      Navigator.pushNamed(context, '/message_screen');
                     }
                     if (!response.success) {
                       print('response.message${response.message}');

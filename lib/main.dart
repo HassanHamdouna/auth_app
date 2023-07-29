@@ -1,4 +1,6 @@
 import 'package:app_auth/firebase_options.dart';
+import 'package:app_auth/screens/app/conversation/chat_screen.dart';
+import 'package:app_auth/screens/app/conversation/message_screen.dart';
 import 'package:app_auth/screens/app/home_screen.dart';
 import 'package:app_auth/screens/auth/core/launch_screen.dart';
 import 'package:app_auth/screens/auth/login_screen.dart';
@@ -40,6 +42,8 @@ class MyApp extends StatelessWidget {
             '/register_phone_screen': (context) => const RegisterPhoneScreen(),
             // '/verification_screen': (context) =>  VerificationScreen(),
             '/home_screen': (context) => const HomeScreen(),
+            '/message_screen': (context) => const MessageScreen(),
+            '/chat_screen': (context) => const ChatScreen(),
           },
         );
       },

@@ -227,7 +227,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
         await FbAuthController().signInWithCheckOTP(myVerificationId, smsCode);
     if (response.success) {
       stopTime();
-      Navigator.pushReplacementNamed(context, '/home_screen');
+      Navigator.pushReplacementNamed(context, '/message_screen');
     }
     if (!response.success) {
       context.showAwesomeDialog(
