@@ -5,7 +5,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class FbAuthController {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  String? verID;
 
   Future<FbResponse> signInWithPhone(String yourNumber) async {
     try {
@@ -22,13 +21,10 @@ class FbAuthController {
         verificationFailed: (FirebaseAuthException e) {
           print('Error FirebaseAuthException: ${e.message}');
         },
-        codeSent: (String verificationId, int? resendToken) {
-          verID = verificationId;
-        },
+        codeSent: (String verificationId, int? resendToken) {},
         codeAutoRetrievalTimeout: (String verificationId) {},
       );
-      return FbResponse('Registered successfully , verify email ', true,
-          verificationId: verID);
+      return FbResponse('Registered successfully , verify email ', true);
     } on FirebaseAuthException catch (e) {
       return FbResponse(e.message ?? 'error', false);
     } catch (e) {

@@ -25,22 +25,8 @@ class _VerificationScreenState extends State<VerificationScreen> {
   static const maxSeconds = 60;
   int seconds = maxSeconds;
   Timer? timer;
-  void startTime() {
-    seconds = 60;
-    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-      setState(() {
-        if (seconds > 0) {
-          seconds--;
-        } else {
-          stopTime();
-        }
-      });
-    });
-  }
-
-  void stopTime() {
-    timer?.cancel();
-  }
+  bool timeSendCode = false;
+  String myVerificationId = '';
 
   String verificationCode = '';
   late TextEditingController _oneOTPControllers;
@@ -60,6 +46,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
     _fiveOTPControllers = TextEditingController();
     _sixOTPControllers = TextEditingController();
     startTime();
+    myVerificationId = widget.verificationId;
   }
 
   @override
@@ -77,6 +64,7 @@ class _VerificationScreenState extends State<VerificationScreen> {
   Widget build(BuildContext context) {
     if (seconds == 0) {
       stopTime();
+      timeSendCode = true;
     }
     return Scaffold(
       backgroundColor: Colors.white,
@@ -139,15 +127,19 @@ class _VerificationScreenState extends State<VerificationScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 TextButton(
-                    onPressed: () {
-                      if (seconds == 0) {
-                        startTime();
-                      }
-                    },
+                    onPressed: timeSendCode
+                        ? () {
+                            if (seconds == 0) {
+                              startTime();
+                              timeSendCode = false;
+                              phoneAuth();
+                            }
+                          }
+                        : null,
                     child: Text(
                       'Resend the code',
                       style: GoogleFonts.notoKufiArabic(
-                        color: Colors.grey,
+                        color: timeSendCode ? Colors.blueAccent : Colors.grey,
                         fontWeight: FontWeight.w400,
                         fontSize: 13.sp,
                       ),
@@ -186,6 +178,24 @@ class _VerificationScreenState extends State<VerificationScreen> {
     );
   }
 
+  void startTime() {
+    seconds = 60;
+    timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() {
+        if (seconds > 0) {
+          seconds--;
+        } else {
+          stopTime();
+          timeSendCode = true;
+        }
+      });
+    });
+  }
+
+  void stopTime() {
+    timer?.cancel();
+  }
+
   void _performOTP() {
     if (_checkData()) {
       _login();
@@ -213,33 +223,44 @@ class _VerificationScreenState extends State<VerificationScreen> {
         _fiveOTPControllers.text +
         _sixOTPControllers.text;
 
-    FbResponse response = await FbAuthController()
-        .signInWithCheckOTP(widget.verificationId, smsCode);
+    FbResponse response =
+        await FbAuthController().signInWithCheckOTP(myVerificationId, smsCode);
     if (response.success) {
+      stopTime();
       Navigator.pushReplacementNamed(context, '/home_screen');
     }
     if (!response.success) {
       context.showAwesomeDialog(
           message: response.message, error: !response.success);
     }
+  }
 
-    // PhoneAuthCredential credential = PhoneAuthProvider.credential(
-    //     verificationId: widget.verificationId, smsCode: smsCode);
-    // await FirebaseAuth.instance.signInWithCredential(credential);
-    //
-    // if (FirebaseAuth.instance.currentUser != null) {
-    //   print('object :: currentUser');
-    //   Navigator.pushReplacementNamed(context, '/home_screen');
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(
-    //       content: Text('error OTP'),
-    //       backgroundColor: Colors.red,
-    //       elevation: 0,
-    //       behavior: SnackBarBehavior.floating,
-    //       duration: Duration(seconds: 1),
-    //     ),
-    //   );
-    // }
+  void phoneAuth() {
+    try {
+      FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: widget.yourNumber, //yourNumber
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          try {
+            await FirebaseAuth.instance.signInWithCredential(credential);
+          } catch (e) {
+            print('Error signing in: ${e.toString()}');
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print('Error FirebaseAuthException: ${e.message}');
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          myVerificationId = verificationId;
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          print('codeAutoRetrievalTimeout 2');
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      return context.showAwesomeDialog(message: e.toString(), error: false);
+    } catch (e) {
+      return context.showAwesomeDialog(message: e.toString(), error: false);
+    }
   }
 }

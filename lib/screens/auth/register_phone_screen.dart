@@ -47,7 +47,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
         elevation: 0,
         leading: IconButton(
             onPressed: () => Navigator.pop(context),
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios,
               color: Colors.black,
             )),
@@ -159,21 +159,45 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
   }
 
   void login() async {
-    FbResponse response =
-        await FbAuthController().signInWithPhone('+970 123456789');
+    phoneAuth();
+  }
 
-    if (response.success) {
-      Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerificationScreen(
-                verificationId: response.verificationId!,
-                yourNumber: '+970 123456789'),
-          ));
-    }
-    if (!response.success) {
-      context.showAwesomeDialog(
-          message: response.message, error: !response.success);
+  void phoneAuth() {
+    try {
+      FirebaseAuth.instance.verifyPhoneNumber(
+        phoneNumber: _phoneTextController.text, //yourNumber
+        timeout: const Duration(seconds: 60),
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          try {
+            await FirebaseAuth.instance.signInWithCredential(credential);
+          } catch (e) {
+            print('Error signing in: ${e.toString()}');
+          }
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          print('Error FirebaseAuthException: ${e.message}');
+        },
+        codeSent: (String verificationId, int? resendToken) {
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => VerificationScreen(
+                    verificationId: verificationId,
+                    yourNumber: _phoneTextController.text),
+              ));
+        },
+        codeAutoRetrievalTimeout: (String verificationId) {
+          print('codeAutoRetrievalTimeout');
+/*          Navigator.of(context).push(PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => VerificationScreen(
+              isTimeOut: true,
+              verificationId: verificationId,
+              yourNumber: _phoneTextController.text),));*/
+        },
+      );
+    } on FirebaseAuthException catch (e) {
+      return context.showAwesomeDialog(message: e.toString(), error: false);
+    } catch (e) {
+      return context.showAwesomeDialog(message: e.toString(), error: false);
     }
   }
 }
