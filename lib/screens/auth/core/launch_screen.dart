@@ -17,9 +17,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        String rote =
-            FbAuthController().loggedIn ? "/message_screen" : "/login_screen";
-        return Navigator.pushReplacementNamed(context, rote);
+        // String rote =
+        //     FbAuthController().loggedIn ? "/message_screen" : "/login_screen";
+        return Navigator.pushReplacementNamed(context, '/login_screen');
       },
     );
   }

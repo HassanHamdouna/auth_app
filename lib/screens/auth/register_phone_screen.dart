@@ -1,5 +1,7 @@
 import 'package:app_auth/firebase/fb_auth_controller.dart';
+import 'package:app_auth/firebase/fb_store_controller.dart';
 import 'package:app_auth/models/fb_response.dart';
+import 'package:app_auth/models/users.dart';
 import 'package:app_auth/screens/auth/verification_screen.dart';
 import 'package:app_auth/utils/context_extenssion.dart';
 import 'package:app_auth/widgets/app_text_field.dart';
@@ -178,6 +180,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
           print('Error FirebaseAuthException: ${e.message}');
         },
         codeSent: (String verificationId, int? resendToken) {
+          FbStoreController().create(users);
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -199,5 +202,16 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
     } catch (e) {
       return context.showAwesomeDialog(message: e.toString(), error: false);
     }
+  }
+
+  Users get users {
+    Users users = Users();
+    users.id = 'ID' + _phoneTextController.text;
+    users.name = _nameTextController.text;
+    users.password = _passwordTextController.text;
+    users.email = _nameTextController.text + "@gmail.com";
+    users.phone = _phoneTextController.text;
+    users.image = '';
+    return users;
   }
 }

@@ -1,7 +1,10 @@
 import 'package:app_auth/firebase/fb_auth_controller.dart';
+import 'package:app_auth/firebase/fb_store_controller.dart';
 import 'package:app_auth/models/fb_response.dart';
+import 'package:app_auth/models/users.dart';
 import 'package:app_auth/utils/context_extenssion.dart';
 import 'package:app_auth/widgets/button_login.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -52,6 +55,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     FbResponse response =
                         await FbAuthController().signInWithFacebook();
                     if (response.success) {
+                      FbStoreController().create(users);
                       Navigator.pushNamed(context, '/message_screen');
                     }
                     if (!response.success) {
@@ -67,8 +71,10 @@ class _LoginScreenState extends State<LoginScreen> {
                   onPressed: () async {
                     FbResponse response =
                         await FbAuthController().signInWithGoogle();
+
                     if (response.success) {
-                      Navigator.pushNamed(context, '/message_screen');
+                      // Navigator.pushNamed(context, '/message_screen');
+                      FbStoreController().create(users);
                     }
                     if (!response.success) {
                       print('response.message${response.message}');
@@ -93,5 +99,16 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
+  }
+
+  Users get users {
+    Users users = Users();
+    users.id = FbAuthController().currentUser.uid;
+    users.name = FbAuthController().currentUser.displayName ?? '';
+    users.password = FbAuthController().currentUser.phoneNumber ?? '';
+    users.email = FbAuthController().currentUser.email;
+    users.phone = FbAuthController().currentUser.phoneNumber ?? '';
+    users.image = FbAuthController().currentUser.photoURL ?? '';
+    return users;
   }
 }

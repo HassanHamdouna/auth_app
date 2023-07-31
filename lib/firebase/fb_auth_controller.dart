@@ -1,4 +1,5 @@
 import 'package:app_auth/models/fb_response.dart';
+import 'package:app_auth/models/users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -112,7 +113,7 @@ class FbAuthController {
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
-      final UserCredential userGoogle =
+      UserCredential userGoogle =
           await _auth.signInWithCredential(oauthCredentials);
       bool verify = userGoogle.user != null;
       print('object${userGoogle.user}');
