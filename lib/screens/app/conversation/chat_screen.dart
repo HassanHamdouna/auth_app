@@ -1,13 +1,15 @@
+import 'package:app_auth/models/users.dart';
 import 'package:app_auth/widgets/input_chat.dart';
 import 'package:app_auth/widgets/item_receives_message.dart';
 import 'package:app_auth/widgets/item_send_message.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
-
+  ChatScreen({super.key, this.users});
+  Users? users;
   @override
   State<ChatScreen> createState() => _ChatScreenState();
 }
@@ -39,18 +41,18 @@ class _ChatScreenState extends State<ChatScreen> {
         titleSpacing: 0,
         title: Row(
           children: [
-            const CircleAvatar(
+            CircleAvatar(
               backgroundColor: Colors.white,
               radius: 20,
               child: CircleAvatar(
                 radius: 18,
-                backgroundImage: AssetImage('images/google_icon.png'),
+                backgroundImage: NetworkImage('${widget.users!.image}'),
               ),
             ),
             SizedBox(
               width: 12.w,
             ),
-            Text('Hassan Hamdouna',
+            Text('${widget.users?.name}',
                 style: GoogleFonts.notoKufiArabic(
                     color: Colors.white,
                     fontSize: 18.sp,

@@ -73,7 +73,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         await FbAuthController().signInWithGoogle();
 
                     if (response.success) {
-                      // Navigator.pushNamed(context, '/message_screen');
+                      Navigator.pushNamed(context, '/message_screen');
                       FbStoreController().create(users);
                     }
                     if (!response.success) {
@@ -104,11 +104,12 @@ class _LoginScreenState extends State<LoginScreen> {
   Users get users {
     Users users = Users();
     users.id = FbAuthController().currentUser.uid;
-    users.name = FbAuthController().currentUser.displayName ?? '';
-    users.password = FbAuthController().currentUser.phoneNumber ?? '';
+    users.name = FbAuthController().currentUser.displayName;
+    users.password = null;
     users.email = FbAuthController().currentUser.email;
-    users.phone = FbAuthController().currentUser.phoneNumber ?? '';
-    users.image = FbAuthController().currentUser.photoURL ?? '';
+    users.phone = FbAuthController().currentUser.phoneNumber;
+    users.image = FbAuthController().currentUser.photoURL ??
+        'https://lh3.googleusercontent.com/a/default-user=s40-c';
     return users;
   }
 }

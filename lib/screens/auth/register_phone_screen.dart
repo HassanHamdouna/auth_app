@@ -211,7 +211,7 @@ class _RegisterPhoneScreenState extends State<RegisterPhoneScreen> {
     users.password = _passwordTextController.text;
     users.email = _nameTextController.text + "@gmail.com";
     users.phone = _phoneTextController.text;
-    users.image = '';
+    users.image = 'https://lh3.googleusercontent.com/a/default-user=s40-c';
     return users;
   }
 }

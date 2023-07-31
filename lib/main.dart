@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
             // '/verification_screen': (context) =>  VerificationScreen(),
             '/home_screen': (context) => const HomeScreen(),
             '/message_screen': (context) => const MessageScreen(),
-            '/chat_screen': (context) => const ChatScreen(),
+            // '/chat_screen': (context) => ChatScreen(),
           },
         );
       },

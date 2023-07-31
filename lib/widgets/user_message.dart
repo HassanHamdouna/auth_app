@@ -5,7 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 class UserMessage extends StatelessWidget {
   const UserMessage({
     super.key,
+    required this.name,
+    required this.image,
   });
+
+  final String name;
+  final String image;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,7 @@ class UserMessage extends StatelessWidget {
               child: CircleAvatar(
                 radius: 25,
                 backgroundColor: Colors.transparent,
-                backgroundImage: AssetImage('images/google_icon.png'),
+                backgroundImage: NetworkImage(image),
               ),
             ),
             SizedBox(
@@ -42,7 +47,7 @@ class UserMessage extends StatelessWidget {
                       Expanded(
                         flex: 5,
                         child: Text(
-                          'Hassan Hamdouna',
+                          name,
                           style: GoogleFonts.notoKufiArabic(
                               color: const Color(0xff0D5DA6),
                               fontSize: 14.sp,
