@@ -1,3 +1,4 @@
+import 'package:app_auth/firebase/fb_auth_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -16,7 +17,9 @@ class _LaunchScreenState extends State<LaunchScreen> {
     Future.delayed(
       const Duration(seconds: 3),
       () {
-        return Navigator.pushReplacementNamed(context, '/login_screen');
+        String rote =
+            FbAuthController().loggedIn ? "/message_screen" : "/login_screen";
+        return Navigator.pushReplacementNamed(context, rote);
       },
     );
   }

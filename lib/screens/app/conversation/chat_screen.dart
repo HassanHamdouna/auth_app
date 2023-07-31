@@ -1,3 +1,4 @@
+import 'package:app_auth/widgets/input_chat.dart';
 import 'package:app_auth/widgets/item_receives_message.dart';
 import 'package:app_auth/widgets/item_send_message.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +13,19 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late TextEditingController _chatTextController;
+  @override
+  void initState() {
+    super.initState();
+    _chatTextController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _chatTextController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,11 +58,21 @@ class _ChatScreenState extends State<ChatScreen> {
           ],
         ),
       ),
-      body: ListView(
-        children: [
-          ItemReceivesMessage(),
-          ItemSendMessage(),
-        ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  ItemReceivesMessage(),
+                  ItemSendMessage(),
+                ],
+              ),
+            ),
+            InputChat(controller: _chatTextController, onPressed: () {}),
+          ],
+        ),
       ),
     );
   }
