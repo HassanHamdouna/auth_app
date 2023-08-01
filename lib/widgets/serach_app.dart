@@ -6,6 +6,7 @@ class SearchApp extends StatelessWidget {
   const SearchApp({
     super.key,
     required this.controller,
+    this.onChanged,
     required this.hintText,
     required this.onPressed,
   });
@@ -13,6 +14,7 @@ class SearchApp extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
   final Function() onPressed;
+  final Function(String)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class SearchApp extends StatelessWidget {
           child: TextField(
             textAlign: TextAlign.start,
             controller: controller,
+            onChanged: onChanged,
             keyboardType: TextInputType.text,
             style: GoogleFonts.notoKufiArabic(
               fontSize: 13.sp,

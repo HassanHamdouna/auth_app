@@ -10,7 +10,8 @@ class FbAuthController {
   Future<FbResponse> signInWithPhone(String yourNumber) async {
     try {
       _auth.verifyPhoneNumber(
-        phoneNumber: yourNumber, //yourNumber
+        phoneNumber: yourNumber,
+        //yourNumber
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           try {
@@ -164,14 +165,6 @@ class FbAuthController {
     }
   }
 
-  Future<void> signOut() async {
-    return await _auth.signOut();
-  }
-
-  User get currentUser => _auth.currentUser!;
-
-  bool get loggedIn => _auth.currentUser != null;
-
   Future<FbResponse> forgetPassword(String email) async {
     try {
       await _auth.sendPasswordResetEmail(email: email);
@@ -182,4 +175,12 @@ class FbAuthController {
       return FbResponse('Something went Wrong', false);
     }
   }
+
+  Future<void> signOut() async {
+    return await _auth.signOut();
+  }
+
+  User get currentUser => _auth.currentUser!;
+
+  bool get loggedIn => _auth.currentUser != null;
 }

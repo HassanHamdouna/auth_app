@@ -33,6 +33,17 @@ class FbStoreController with FirebaseHelper {
         .catchError((error) => errorResponse);
   }
 
+  Stream<QuerySnapshot<Users>> search(String name) async* {
+    yield* _storage
+        .collection('Users')
+        .where('name', isEqualTo: name)
+        .withConverter<Users>(
+          fromFirestore: (snapshot, options) => Users.fromMap(snapshot.data()!),
+          toFirestore: (Users value, options) => value.toMap(),
+        )
+        .snapshots();
+  }
+
   Stream<QuerySnapshot<Users>> read() async* {
     yield* _storage
         .collection('Users')

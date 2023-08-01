@@ -18,6 +18,7 @@ class MessageScreen extends StatefulWidget {
 }
 
 class _MessageScreenState extends State<MessageScreen> {
+  bool isTextSearchEmpty = true;
   late TextEditingController _searchTextController;
 
   @override
@@ -51,48 +52,107 @@ class _MessageScreenState extends State<MessageScreen> {
           children: [
             SearchApp(
                 controller: _searchTextController,
+                onChanged: (vaule) {
+                  setState(() {
+                    isTextSearchEmpty = _searchTextController.text.isEmpty;
+                  });
+                },
                 hintText: 'Search for messages',
-                onPressed: () {}),
-            Expanded(
-              child: StreamBuilder<QuerySnapshot<Users>>(
-                stream: FbStoreController().read(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const AppCircularProgress();
-                  } else if (snapshot.data!.docs.isNotEmpty &&
-                      snapshot.hasData) {
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ChatScreen(
-                                        users: getUsers(
-                                            snapshot.data!.docs[index])),
+                onPressed: () {
+                  setState(() {});
+                }),
+            isTextSearchEmpty
+                ? Expanded(
+                    child: StreamBuilder<QuerySnapshot<Users>>(
+                      stream: FbStoreController().read(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const AppCircularProgress();
+                        } else if (snapshot.data!.docs.isNotEmpty &&
+                            snapshot.hasData) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatScreen(
+                                              users: getUsers(
+                                                  snapshot.data!.docs[index])),
+                                        ));
+                                  },
+                                  child: UserMessage(
+                                    name: snapshot.data!.docs[index]
+                                            .data()
+                                            .name ??
+                                        '',
+                                    image: snapshot.data!.docs[index]
+                                            .data()
+                                            .image ??
+                                        'https://lh3.googleusercontent.com/a/default-user=s40-c',
                                   ));
                             },
-                            child: UserMessage(
-                              name:
-                                  snapshot.data!.docs[index].data().name ?? '',
-                              image: snapshot.data!.docs[index].data().image ??
-                                  'https://lh3.googleusercontent.com/a/default-user=s40-c',
-                            ));
+                          );
+                        } else {
+                          return const Center(
+                            child: Text(
+                              'NO Users',
+                            ),
+                          );
+                        }
                       },
-                    );
-                  } else {
-                    return const Center(
-                      child: Text(
-                        'NO Users',
-                      ),
-                    );
-                  }
-                },
-              ),
-            ),
+                    ),
+                  )
+                : Expanded(
+                    child: StreamBuilder<QuerySnapshot<Users>>(
+                      stream: FbStoreController()
+                          .search(_searchTextController.text),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const AppCircularProgress();
+                        } else if (snapshot.data!.docs.isNotEmpty &&
+                            snapshot.hasData) {
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => ChatScreen(
+                                              users: getUsers(
+                                                  snapshot.data!.docs[index])),
+                                        ));
+                                  },
+                                  child: UserMessage(
+                                    name: snapshot.data!.docs[index]
+                                            .data()
+                                            .name ??
+                                        '',
+                                    image: snapshot.data!.docs[index]
+                                            .data()
+                                            .image ??
+                                        'https://lh3.googleusercontent.com/a/default-user=s40-c',
+                                  ));
+                            },
+                          );
+                        } else {
+                          return const Center(
+                            child: Text(
+                              'NO Users',
+                            ),
+                          );
+                        }
+                      },
+                    ),
+                  ),
           ],
         ),
       ),
