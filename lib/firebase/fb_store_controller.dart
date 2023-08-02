@@ -1,4 +1,5 @@
 import 'package:app_auth/models/fb_response.dart';
+import 'package:app_auth/models/messages.dart';
 import 'package:app_auth/models/users.dart';
 import 'package:app_auth/utils/firebase_helper.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -33,6 +34,16 @@ class FbStoreController with FirebaseHelper {
         .catchError((error) => errorResponse);
   }
 
+  Stream<QuerySnapshot<Users>> read() async* {
+    yield* _storage
+        .collection('Users')
+        .withConverter<Users>(
+          fromFirestore: (snapshot, options) => Users.fromMap(snapshot.data()!),
+          toFirestore: (Users value, options) => value.toMap(),
+        )
+        .snapshots();
+  }
+
   Stream<QuerySnapshot<Users>> search(String name) async* {
     yield* _storage
         .collection('Users')
@@ -44,13 +55,28 @@ class FbStoreController with FirebaseHelper {
         .snapshots();
   }
 
-  Stream<QuerySnapshot<Users>> read() async* {
+  Future<FbResponse> sendMessage(Messages messages) async {
+    return _storage
+        .collection('Chat')
+        .doc('sender_id')
+        .collection('messages')
+        .add(messages.toMap())
+        .then((value) => successfullyResponse)
+        .catchError((error) => errorResponse);
+  }
+
+  Stream<QuerySnapshot<Messages>> readMessages(Messages messages) async* {
     yield* _storage
-        .collection('Users')
-        .withConverter<Users>(
-          fromFirestore: (snapshot, options) => Users.fromMap(snapshot.data()!),
-          toFirestore: (Users value, options) => value.toMap(),
+        .collection('Chat')
+        .doc('sender_id')
+        .collection('messages')
+        .orderBy('timestamp', descending: true)
+        .withConverter(
+          fromFirestore: (snapshot, options) =>
+              Messages.forMap(snapshot.data()!),
+          toFirestore: (Messages value, options) => value.toMap(),
         )
         .snapshots();
   }
+// .orderBy(messages.timestamp)
 }

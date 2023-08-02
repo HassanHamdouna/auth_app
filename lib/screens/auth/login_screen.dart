@@ -4,6 +4,7 @@ import 'package:app_auth/models/fb_response.dart';
 import 'package:app_auth/models/users.dart';
 import 'package:app_auth/utils/context_extenssion.dart';
 import 'package:app_auth/widgets/button_login.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';

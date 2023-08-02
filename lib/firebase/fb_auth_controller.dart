@@ -1,3 +1,4 @@
+import 'package:app_auth/firebase/fb_store_controller.dart';
 import 'package:app_auth/models/fb_response.dart';
 import 'package:app_auth/models/users.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -116,8 +117,8 @@ class FbAuthController {
       );
       UserCredential userGoogle =
           await _auth.signInWithCredential(oauthCredentials);
+
       bool verify = userGoogle.user != null;
-      print('object${userGoogle.user}');
       if (!verify) {
         return FbResponse('Sign-in failed', false);
       }

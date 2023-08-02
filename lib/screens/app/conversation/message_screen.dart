@@ -1,3 +1,4 @@
+import 'package:app_auth/firebase/fb_auth_controller.dart';
 import 'package:app_auth/firebase/fb_store_controller.dart';
 import 'package:app_auth/models/users.dart';
 import 'package:app_auth/screens/app/conversation/chat_screen.dart';
@@ -38,6 +39,19 @@ class _MessageScreenState extends State<MessageScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(() {
+                  FbAuthController().signOut();
+                  Navigator.pushReplacementNamed(context, '/login_screen');
+                });
+              },
+              icon: Icon(
+                Icons.login_sharp,
+                color: Colors.white,
+              ))
+        ],
         title: Text('Message',
             style: GoogleFonts.notoKufiArabic(
               fontSize: 18.sp,

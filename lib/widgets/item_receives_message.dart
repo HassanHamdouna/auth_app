@@ -5,7 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 class ItemReceivesMessage extends StatelessWidget {
   const ItemReceivesMessage({
     super.key,
+    required this.contentText,
+    required this.timeMessage,
   });
+
+  final String contentText;
+  final DateTime timeMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -31,17 +36,17 @@ class ItemReceivesMessage extends StatelessWidget {
                 padding: EdgeInsets.all(5.r),
                 child: Text(
                   maxLines: 3,
-                  'Good morning Mr. Mohamed how are you Good morning Mr. Mohamed how are you ',
+                  contentText,
                   style: GoogleFonts.notoKufiArabic(
                       color: const Color(0xff0F1828),
                       fontWeight: FontWeight.w400,
-                      fontSize: 14.sp),
+                      fontSize: 16.sp),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.all(5),
                 child: Text(
-                  '09:45',
+                  '${timeMessage.hour.sign}:${timeMessage.minute}',
                   textAlign: TextAlign.end,
                   style: GoogleFonts.notoKufiArabic(
                       color: const Color(0xff0F1828),
