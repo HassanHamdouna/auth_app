@@ -58,7 +58,10 @@ class FbStoreController with FirebaseHelper {
   Future<FbResponse> sendMessage(Messages messages) async {
     return _storage
         .collection('Chat')
-        .doc('sender_id')
+        .doc(chatRoomId(
+          messages.senderId.toString(),
+          messages.receiverId.toString(),
+        ))
         .collection('messages')
         .add(messages.toMap())
         .then((value) => successfullyResponse)
@@ -68,9 +71,12 @@ class FbStoreController with FirebaseHelper {
   Stream<QuerySnapshot<Messages>> readMessages(Messages messages) async* {
     yield* _storage
         .collection('Chat')
-        .doc('sender_id')
+        .doc(chatRoomId(
+          messages.senderId.toString(),
+          messages.receiverId.toString(),
+        ))
         .collection('messages')
-        .orderBy('timestamp', descending: true)
+        .orderBy('timestamp', descending: false)
         .withConverter(
           fromFirestore: (snapshot, options) =>
               Messages.forMap(snapshot.data()!),
@@ -78,5 +84,20 @@ class FbStoreController with FirebaseHelper {
         )
         .snapshots();
   }
-// .orderBy(messages.timestamp)
+
+  String? chatRoomId(String sendUser, receiverUser) {
+    if (sendUser[0].toLowerCase().codeUnits[0] >
+        receiverUser[0].toLowerCase().codeUnits[0]) {
+      return '${receiverUser}_${sendUser}';
+    }
+
+    return '${sendUser}_${receiverUser}';
+  }
+
+// String chatRoomId2(String sendUser, receiverUser) {
+//   List<String> users = [sendUser, receiverUser]..sort();
+//   String roomId = '${users[0]}_${users[1]}';
+//
+//   return roomId;
+// }
 }

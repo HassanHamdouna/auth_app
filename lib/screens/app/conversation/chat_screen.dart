@@ -19,11 +19,13 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  String? nameUserCureent;
   late TextEditingController _chatTextController;
   @override
   void initState() {
     super.initState();
     _chatTextController = TextEditingController();
+    nameUserCureent = widget.users?.name;
   }
 
   @override
@@ -76,9 +78,8 @@ class _ChatScreenState extends State<ChatScreen> {
                   } else if (snapshot.data!.docs.isNotEmpty &&
                       snapshot.hasData) {
                     return ListView.builder(
-                      reverse: true,
+                      reverse: false,
                       itemCount: snapshot.data!.docs.reversed.length,
-                      // itemCount: snapshot.data!.docs.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         // return ItemSendMessage(
@@ -125,8 +126,7 @@ class _ChatScreenState extends State<ChatScreen> {
                 controller: _chatTextController,
                 onPressed: () {
                   setState(() {
-                    FbStoreController().sendMessage(messages);
-                    _chatTextController.clear();
+                    sendMessage();
                   });
                 }),
           ],
@@ -135,10 +135,23 @@ class _ChatScreenState extends State<ChatScreen> {
     );
   }
 
+  void sendMessage() {
+    if (_chatTextController.text.isNotEmpty) {
+      FbStoreController().sendMessage(messages);
+      _chatTextController.clear();
+    }
+  }
+
   Messages get messages {
     Messages messages = Messages();
+    messages.senderName =
+        FbAuthController().currentUser.displayName ?? 'displayName';
+    messages.receiverName = nameUserCureent!;
     messages.senderId = FbAuthController().currentUser.uid;
+    print(' senderId  :${FbAuthController().currentUser.uid}');
     messages.receiverId = widget.users!.id!;
+    print(' receiverId  :${widget.users!.id}');
+
     messages.content = _chatTextController.text;
     messages.timestamp = DateTime.now().toString();
     return messages;

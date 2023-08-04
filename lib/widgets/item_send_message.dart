@@ -44,7 +44,7 @@ class ItemSendMessage extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5),
                 child: Text(
-                  '${timeMessage.hour.sign}:${timeMessage.minute}',
+                  '${timeMessage.hour.sign + 1}:${timeMessage.minute}',
                   textAlign: TextAlign.start,
                   style: GoogleFonts.notoKufiArabic(
                       color: Colors.white,
