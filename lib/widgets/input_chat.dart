@@ -6,11 +6,15 @@ class InputChat extends StatelessWidget {
   InputChat({
     super.key,
     required this.controller,
-    required this.onPressed,
+    required this.onPressedSend,
+    required this.onPressedImageGallery,
+    required this.onPressedImageCamera,
   });
 
   TextEditingController? controller;
-  Function()? onPressed;
+  Function()? onPressedSend;
+  Function()? onPressedImageGallery;
+  Function()? onPressedImageCamera;
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -25,13 +29,6 @@ class InputChat extends StatelessWidget {
               elevation: 5,
               child: Row(
                 children: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.emoji_emotions,
-                      color: Colors.blue,
-                    ),
-                  ),
                   Expanded(
                     child: TextField(
                       textAlign: TextAlign.start,
@@ -60,14 +57,14 @@ class InputChat extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: onPressedImageGallery,
                     icon: const Icon(
                       Icons.image,
                       color: Colors.blue,
                     ),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: onPressedImageCamera,
                     icon: const Icon(
                       Icons.camera_alt_outlined,
                       color: Colors.blue,
@@ -78,7 +75,7 @@ class InputChat extends StatelessWidget {
             ),
           ),
           MaterialButton(
-            onPressed: onPressed,
+            onPressed: onPressedSend,
             minWidth: 0,
             shape: const CircleBorder(),
             color: Colors.green,

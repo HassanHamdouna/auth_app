@@ -85,19 +85,12 @@ class FbStoreController with FirebaseHelper {
         .snapshots();
   }
 
-  String? chatRoomId(String sendUser, receiverUser) {
-    if (sendUser[0].toLowerCase().codeUnits[0] >
-        receiverUser[0].toLowerCase().codeUnits[0]) {
-      return '${receiverUser}_${sendUser}';
+  String? chatRoomId(String sendId, receiverID) {
+    if (sendId[0].toLowerCase().codeUnits[0] >
+        receiverID[0].toLowerCase().codeUnits[0]) {
+      return '${receiverID}_${sendId}';
     }
 
-    return '${sendUser}_${receiverUser}';
+    return '${sendId}_${receiverID}';
   }
-
-// String chatRoomId2(String sendUser, receiverUser) {
-//   List<String> users = [sendUser, receiverUser]..sort();
-//   String roomId = '${users[0]}_${users[1]}';
-//
-//   return roomId;
-// }
 }

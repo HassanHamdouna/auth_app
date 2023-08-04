@@ -10,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 
 class ChatScreen extends StatefulWidget {
   ChatScreen({super.key, this.users});
@@ -20,12 +21,15 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   String? nameUserCureent;
+  late ImagePicker _imagePicker;
+  XFile? _filePickedImage;
   late TextEditingController _chatTextController;
   @override
   void initState() {
     super.initState();
     _chatTextController = TextEditingController();
     nameUserCureent = widget.users?.name;
+    _imagePicker = ImagePicker();
   }
 
   @override
@@ -82,12 +86,6 @@ class _ChatScreenState extends State<ChatScreen> {
                       itemCount: snapshot.data!.docs.reversed.length,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
-                        // return ItemSendMessage(
-                        //   contentText:
-                        //       snapshot.data!.docs[index].data().content,
-                        //   timeMessage: DateTime.parse(
-                        //       snapshot.data!.docs[index].data().timestamp),
-                        // );
                         return snapshot.data!.docs[index].data().senderId ==
                                 FbAuthController().currentUser.uid
                             ? ItemSendMessage(
@@ -124,7 +122,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
             InputChat(
                 controller: _chatTextController,
-                onPressed: () {
+                onPressedImageCamera: () => _openCamera(),
+                onPressedImageGallery: () => _openGallery(),
+                onPressedSend: () {
                   setState(() {
                     sendMessage();
                   });
@@ -142,16 +142,27 @@ class _ChatScreenState extends State<ChatScreen> {
     }
   }
 
+  void _openGallery() async {
+    XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      _filePickedImage = image;
+    }
+  }
+
+  void _openCamera() async {
+    XFile? image = await _imagePicker.pickImage(source: ImageSource.camera);
+    if (image != null) {
+      _filePickedImage = image;
+    }
+  }
+
   Messages get messages {
     Messages messages = Messages();
     messages.senderName =
         FbAuthController().currentUser.displayName ?? 'displayName';
     messages.receiverName = nameUserCureent!;
     messages.senderId = FbAuthController().currentUser.uid;
-    print(' senderId  :${FbAuthController().currentUser.uid}');
     messages.receiverId = widget.users!.id!;
-    print(' receiverId  :${widget.users!.id}');
-
     messages.content = _chatTextController.text;
     messages.timestamp = DateTime.now().toString();
     return messages;
