@@ -176,7 +176,6 @@ class _MessageScreenState extends State<MessageScreen> {
   Users getUsers(QueryDocumentSnapshot<Users> queryNote) {
     Users users = Users();
     users.id = queryNote.data().id;
-    print('data :: ${queryNote.id}');
     users.name = queryNote.data().name;
     users.image = queryNote.data().image;
     return users;

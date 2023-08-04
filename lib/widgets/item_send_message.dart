@@ -1,15 +1,22 @@
+import 'dart:io';
+
+import 'package:app_auth/models/messages.dart';
+import 'package:app_auth/widgets/app_circular_progress.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ItemSendMessage extends StatelessWidget {
-  const ItemSendMessage({
+  ItemSendMessage({
     super.key,
     required this.contentText,
     required this.timeMessage,
+    required this.type,
   });
   final String contentText;
   final DateTime timeMessage;
+  final Type type;
 
   @override
   Widget build(BuildContext context) {
@@ -33,13 +40,25 @@ class ItemSendMessage extends StatelessWidget {
             children: [
               Padding(
                 padding: EdgeInsets.all(5.r),
-                child: Text(
-                  contentText,
-                  style: GoogleFonts.notoKufiArabic(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w400,
-                      fontSize: 16.sp),
-                ),
+                child: type == Type.text
+                    ? Text(
+                        contentText,
+                        style: GoogleFonts.notoKufiArabic(
+                            color: Colors.white,
+                            fontWeight: FontWeight.w400,
+                            fontSize: 16.sp),
+                      )
+                    : Image.file(File(contentText)),
+                // : CachedNetworkImage(
+                //     imageUrl: contentText,
+                //     fit: BoxFit.cover,
+                //     width: double.infinity,
+                //     height: double.infinity,
+                //     progressIndicatorBuilder: (context, url, progress) =>
+                //         const AppCircularProgress(),
+                //     errorWidget: (context, url, error) =>
+                //         const Icon(Icons.error),
+                //   ),
               ),
               Padding(
                 padding: const EdgeInsets.all(5),

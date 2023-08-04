@@ -89,6 +89,10 @@ class _ChatScreenState extends State<ChatScreen> {
                         return snapshot.data!.docs[index].data().senderId ==
                                 FbAuthController().currentUser.uid
                             ? ItemSendMessage(
+                                type: snapshot.data!.docs[index].data().type ==
+                                        Type.text
+                                    ? Type.text
+                                    : Type.image,
                                 contentText:
                                     snapshot.data!.docs[index].data().content,
                                 timeMessage: DateTime.parse(snapshot
@@ -139,6 +143,11 @@ class _ChatScreenState extends State<ChatScreen> {
     if (_chatTextController.text.isNotEmpty) {
       FbStoreController().sendMessage(messages);
       _chatTextController.clear();
+      // _filePickedImage = null;
+    }
+    if (_filePickedImage != null) {
+      FbStoreController().sendMessage(messages);
+      _filePickedImage = null;
     }
   }
 
@@ -146,6 +155,7 @@ class _ChatScreenState extends State<ChatScreen> {
     XFile? image = await _imagePicker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       _filePickedImage = image;
+      sendMessage();
     }
   }
 
@@ -153,18 +163,21 @@ class _ChatScreenState extends State<ChatScreen> {
     XFile? image = await _imagePicker.pickImage(source: ImageSource.camera);
     if (image != null) {
       _filePickedImage = image;
+      sendMessage();
     }
   }
 
   Messages get messages {
     Messages messages = Messages();
-    messages.senderName =
-        FbAuthController().currentUser.displayName ?? 'displayName';
+    messages.senderName = FbAuthController().currentUser.displayName ?? 'null';
     messages.receiverName = nameUserCureent!;
     messages.senderId = FbAuthController().currentUser.uid;
     messages.receiverId = widget.users!.id!;
-    messages.content = _chatTextController.text;
     messages.timestamp = DateTime.now().toString();
+    messages.type = _filePickedImage == null ? Type.text : Type.image;
+    messages.content = _filePickedImage == null
+        ? _chatTextController.text
+        : _filePickedImage!.path;
     return messages;
   }
 }
