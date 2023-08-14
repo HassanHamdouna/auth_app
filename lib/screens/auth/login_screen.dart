@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -72,7 +73,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   title: 'Apple',
                   imageIcon: FontAwesomeIcons.apple,
                   colorIcon: Colors.white,
-                  onPressed: () {
+                  onPressed: () /*async*/{
+                    /*final credential = await SignInWithApple.getAppleIDCredential(
+                      scopes: [
+                        AppleIDAuthorizationScopes.email,
+                        AppleIDAuthorizationScopes.fullName,
+                      ],
+                    );
+
+                    print(credential);*/
                   }),
               ButtonLogin(
                   color: Colors.white60,
