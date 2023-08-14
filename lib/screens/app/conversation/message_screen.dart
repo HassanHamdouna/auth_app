@@ -1,5 +1,6 @@
 import 'package:app_auth/firebase/fb_auth_controller.dart';
 import 'package:app_auth/firebase/fb_store_controller.dart';
+import 'package:app_auth/models/messages.dart';
 import 'package:app_auth/models/users.dart';
 import 'package:app_auth/screens/app/conversation/chat_screen.dart';
 import 'package:app_auth/widgets/app_circular_progress.dart';
@@ -12,8 +13,8 @@ import '../../../widgets/serach_app.dart';
 import '../../../widgets/user_message.dart';
 
 class MessageScreen extends StatefulWidget {
-  const MessageScreen({super.key});
-
+  MessageScreen({super.key, this.messages});
+  Messages? messages;
   @override
   State<MessageScreen> createState() => _MessageScreenState();
 }
@@ -47,7 +48,7 @@ class _MessageScreenState extends State<MessageScreen> {
                   Navigator.pushReplacementNamed(context, '/login_screen');
                 });
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.login_sharp,
                 color: Colors.white,
               ))
@@ -104,6 +105,8 @@ class _MessageScreenState extends State<MessageScreen> {
                                             .data()
                                             .name ??
                                         '',
+                                    lastChat: /*snapshot.data!.docs[index].data(). ??*/
+                                        widget.messages?.receiverId ?? "m",
                                     image: snapshot.data!.docs[index]
                                             .data()
                                             .image ??
@@ -150,6 +153,7 @@ class _MessageScreenState extends State<MessageScreen> {
                                             .data()
                                             .name ??
                                         '',
+                                    lastChat: '',
                                     image: snapshot.data!.docs[index]
                                             .data()
                                             .image ??

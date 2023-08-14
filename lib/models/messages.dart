@@ -4,6 +4,7 @@ class Messages {
   late String senderName;
   late String receiverName;
   late String content;
+  late String status;
   late final Type type;
   late String timestamp;
 
@@ -15,6 +16,7 @@ class Messages {
     senderName = data['sender_name'];
     receiverName = data['receiver_name'];
     content = data['content'];
+    status = data['status'];
     type = data['type'] == Type.image.name ? Type.image : Type.text;
     timestamp = data['timestamp'];
   }
@@ -26,6 +28,7 @@ class Messages {
     data['sender_name'] = senderName;
     data['receiver_name'] = receiverName;
     data['content'] = content;
+    data['status'] = status;
     data['type'] = type.name;
     data['timestamp'] = timestamp;
     return data;

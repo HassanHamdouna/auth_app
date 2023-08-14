@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -51,7 +52,8 @@ class _LoginScreenState extends State<LoginScreen> {
               ButtonLogin(
                   color: Colors.blueAccent,
                   title: 'facebook',
-                  image: 'facebook',
+                  imageIcon: FontAwesomeIcons.facebook,
+                  colorIcon: Colors.white,
                   onPressed: () async {
                     FbResponse response =
                         await FbAuthController().signInWithFacebook();
@@ -66,9 +68,17 @@ class _LoginScreenState extends State<LoginScreen> {
                     }
                   }),
               ButtonLogin(
-                  color: Colors.white54,
+                  color: Colors.black,
+                  title: 'Apple',
+                  imageIcon: FontAwesomeIcons.apple,
+                  colorIcon: Colors.white,
+                  onPressed: () {
+                  }),
+              ButtonLogin(
+                  color: Colors.white60,
                   title: 'Google',
-                  image: 'google',
+                  imageIcon: FontAwesomeIcons.google,
+                  colorIcon: Colors.redAccent,
                   onPressed: () async {
                     FbResponse response =
                         await FbAuthController().signInWithGoogle();
@@ -86,12 +96,15 @@ class _LoginScreenState extends State<LoginScreen> {
               ButtonLogin(
                   color: Colors.black26,
                   title: 'Twitter',
-                  image: 'twitter',
+                  imageIcon: FontAwesomeIcons.twitter,
+                  colorIcon: Colors.blue,
+
                   onPressed: () {}),
               ButtonLogin(
                   color: Colors.black,
                   title: 'phone',
-                  image: 'phone',
+                  imageIcon: FontAwesomeIcons.phone,
+                  colorIcon: Colors.white,
                   onPressed: () {
                     Navigator.pushNamed(context, '/register_phone_screen');
                   }),

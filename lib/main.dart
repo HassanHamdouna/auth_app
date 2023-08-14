@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
             '/register_phone_screen': (context) => const RegisterPhoneScreen(),
             // '/verification_screen': (context) =>  VerificationScreen(),
             '/home_screen': (context) => const HomeScreen(),
-            '/message_screen': (context) => const MessageScreen(),
+            '/message_screen': (context) => MessageScreen(),
             // '/chat_screen': (context) => ChatScreen(),
           },
         );

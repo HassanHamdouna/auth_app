@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class ButtonLogin extends StatelessWidget {
@@ -7,12 +8,14 @@ class ButtonLogin extends StatelessWidget {
     super.key,
     required this.color,
     required this.title,
-    required this.image,
+    required this.imageIcon,
+    required this.colorIcon,
     required this.onPressed,
   });
 
   Color color;
-  String image;
+  Color colorIcon;
+  IconData? imageIcon;
   String title;
   Function()? onPressed;
 
@@ -29,12 +32,7 @@ class ButtonLogin extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  Image.asset(
-                    fit: BoxFit.contain,
-                    'images/${image}_icon.png',
-                    width: 40.w,
-                    height: 40.h,
-                  ),
+                   FaIcon(imageIcon,color: colorIcon,size: 30),
                   Text(
                     'Sign in with $title',
                     style: GoogleFonts.poppins(

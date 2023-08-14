@@ -1,8 +1,6 @@
 import 'dart:io';
 
 import 'package:app_auth/models/messages.dart';
-import 'package:app_auth/widgets/app_circular_progress.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';

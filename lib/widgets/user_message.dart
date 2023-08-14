@@ -6,10 +6,12 @@ class UserMessage extends StatelessWidget {
   const UserMessage({
     super.key,
     required this.name,
+    required this.lastChat,
     required this.image,
   });
 
   final String name;
+  final String lastChat;
   final String image;
 
   @override
@@ -84,7 +86,7 @@ class UserMessage extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    'You\'re welcome! If you have any more questions or need further assistance, feel free to ask. Happy coding!',
+                    lastChat,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: GoogleFonts.notoKufiArabic(

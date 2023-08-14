@@ -2,6 +2,7 @@ import 'package:app_auth/firebase/fb_auth_controller.dart';
 import 'package:app_auth/firebase/fb_store_controller.dart';
 import 'package:app_auth/models/messages.dart';
 import 'package:app_auth/models/users.dart';
+import 'package:app_auth/screens/app/conversation/message_screen.dart';
 import 'package:app_auth/widgets/app_circular_progress.dart';
 import 'package:app_auth/widgets/input_chat.dart';
 import 'package:app_auth/widgets/item_receives_message.dart';
@@ -19,7 +20,7 @@ class ChatScreen extends StatefulWidget {
   State<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _ChatScreenState extends State<ChatScreen> with WidgetsBindingObserver {
   String? nameUserCureent;
   late ImagePicker _imagePicker;
   XFile? _filePickedImage;
@@ -30,6 +31,16 @@ class _ChatScreenState extends State<ChatScreen> {
     _chatTextController = TextEditingController();
     nameUserCureent = widget.users?.name;
     _imagePicker = ImagePicker();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      // Online
+    } else {
+      //false
+    }
   }
 
   @override
@@ -101,6 +112,10 @@ class _ChatScreenState extends State<ChatScreen> {
                                     .timestamp),
                               )
                             : ItemReceivesMessage(
+                                type: snapshot.data!.docs[index].data().type ==
+                                        Type.text
+                                    ? Type.text
+                                    : Type.image,
                                 contentText:
                                     snapshot.data!.docs[index].data().content,
                                 timeMessage: DateTime.parse(snapshot
@@ -178,6 +193,7 @@ class _ChatScreenState extends State<ChatScreen> {
     messages.content = _filePickedImage == null
         ? _chatTextController.text
         : _filePickedImage!.path;
+    messages.status = 'online';
     return messages;
   }
 }
