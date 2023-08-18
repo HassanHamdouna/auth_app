@@ -1,3 +1,4 @@
+import 'package:app_auth/firebase/fb_notifications.dart';
 import 'package:app_auth/firebase_options.dart';
 import 'package:app_auth/screens/app/conversation/chat_screen.dart';
 import 'package:app_auth/screens/app/conversation/message_screen.dart';
@@ -20,6 +21,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await FbNotifications.initNotifications();
   runApp(const MyApp());
 }
 

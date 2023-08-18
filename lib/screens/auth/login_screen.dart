@@ -1,4 +1,5 @@
 import 'package:app_auth/firebase/fb_auth_controller.dart';
+import 'package:app_auth/firebase/fb_notifications.dart';
 import 'package:app_auth/firebase/fb_store_controller.dart';
 import 'package:app_auth/models/fb_response.dart';
 import 'package:app_auth/models/users.dart';
@@ -19,7 +20,15 @@ class LoginScreen extends StatefulWidget {
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+
+class _LoginScreenState extends State<LoginScreen> with FbNotifications {
+
+  @override
+  void initState() {
+    super.initState();
+    requestNotificationPermissions();
+    initializeForegroundNotificationForAndroid();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
